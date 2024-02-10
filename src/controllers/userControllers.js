@@ -1,0 +1,90 @@
+const users = [
+  {
+    id: 1,
+    firstname: "John",
+    lastname: "Doe",
+    email: "john.doe@example.com",
+    city: "Paris",
+    langage: "English",
+  },
+  {
+    id: 2,
+    firstname: "Valeriy",
+    lastname: "Appius",
+    email: "valeriy.appius@example.com",
+    city: "Moscow",
+    langage: "Russian",
+  },
+  {
+    id: 3,
+    firstname: "Ralf",
+    lastname: "Geronimo",
+    email: "ralf.geronimo@example.com",
+    city: "New York",
+    langage: "Italian",
+  },
+  {
+    id: 4,
+    firstname: "Maria",
+    lastname: "Iskandar",
+    email: "maria.iskandar@example.com",
+    city: "New York",
+    langage: "German",
+  },
+  {
+    id: 5,
+    firstname: "Jane",
+    lastname: "Doe",
+    email: "jane.doe@example.com",
+    city: "London",
+    langage: "English",
+  },
+  {
+    id: 6,
+    firstname: "Johanna",
+    lastname: "Martino",
+    email: "johanna.martino@example.com",
+    city: "Milan",
+    langage: "Spanish",
+  },
+];
+
+const database = require("../../database");
+
+const getUsers = (req, res) => {
+  database
+    .query("select * from users")
+    .then(([users]) => {
+      res.status(200).json(users); // use res.json instead of console.log
+    })
+    .then(([users]) => {
+      res.json(users); // use res.json instead of console.log
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500);
+    });
+};
+
+const getUserById = (req, res) => {
+  const id = parseInt(req.params.id);
+
+  database
+    .query("select * from users where id = ?", [id])
+    .then(([user]) => {
+      if (user[0] != null) {
+        res.status(200).json(user[0]);
+      } else {
+        res.status(404).send("Not Found");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500);
+    });
+};
+
+module.exports = {
+  getUsers,
+  getUserById,
+};
