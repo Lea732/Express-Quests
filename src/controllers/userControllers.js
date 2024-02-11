@@ -57,9 +57,6 @@ const getUsers = (req, res) => {
     .then(([users]) => {
       res.status(200).json(users); // use res.json instead of console.log
     })
-    .then(([users]) => {
-      res.json(users); // use res.json instead of console.log
-    })
     .catch((err) => {
       console.error(err);
       res.status(500);
