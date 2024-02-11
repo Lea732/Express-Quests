@@ -5,7 +5,7 @@ const users = [
     lastname: "Doe",
     email: "john.doe@example.com",
     city: "Paris",
-    langage: "English",
+    language: "English",
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ const users = [
     lastname: "Appius",
     email: "valeriy.appius@example.com",
     city: "Moscow",
-    langage: "Russian",
+    language: "Russian",
   },
   {
     id: 3,
@@ -21,7 +21,7 @@ const users = [
     lastname: "Geronimo",
     email: "ralf.geronimo@example.com",
     city: "New York",
-    langage: "Italian",
+    language: "Italian",
   },
   {
     id: 4,
@@ -29,7 +29,7 @@ const users = [
     lastname: "Iskandar",
     email: "maria.iskandar@example.com",
     city: "New York",
-    langage: "German",
+    language: "German",
   },
   {
     id: 5,
@@ -37,7 +37,7 @@ const users = [
     lastname: "Doe",
     email: "jane.doe@example.com",
     city: "London",
-    langage: "English",
+    language: "English",
   },
   {
     id: 6,
@@ -45,7 +45,7 @@ const users = [
     lastname: "Martino",
     email: "johanna.martino@example.com",
     city: "Milan",
-    langage: "Spanish",
+    language: "Spanish",
   },
 ];
 
@@ -81,7 +81,26 @@ const getUserById = (req, res) => {
     });
 };
 
+const postUser = (req, res) => {
+  const { firstname, lastname, email, city, language } = req.body;
+
+  database
+    .query(
+      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
+      [firstname, lastname, email, city, language]
+    )
+    .then(([result]) => {
+      res.status(201).send({ id: result.insertId });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500);
+    });
+
+};
+
 module.exports = {
   getUsers,
   getUserById,
+  postUser
 };
