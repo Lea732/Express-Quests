@@ -52,14 +52,30 @@ const users = [
 const database = require("../../database");
 
 const getUsers = (req, res) => {
+  let sql = "select * from users";
+  const sqlValues = [];
+
+  if (req.query.language != null) {
+    sql += " where language = ?";
+    sqlValues.push(req.query.language);
+  
+    if (req.query.city != null) {
+      sql += " and city = ?";
+      sqlValues.push(req.query.city);
+    }
+  } else if (req.query.city != null) {
+    sql += " where city = ?";
+    sqlValues.push(req.query.city);
+  }
+
   database
-    .query("select * from users")
+    .query(sql, sqlValues)
     .then(([users]) => {
-      res.status(200).json(users); // use res.json instead of console.log
+      res.status(200).json(users);
     })
     .catch((err) => {
       console.error(err);
-      res.status(500);
+      res.status(500).send("Error retrieving data from database");
     });
 };
 
@@ -70,14 +86,14 @@ const getUserById = (req, res) => {
     .query("select * from users where id = ?", [id])
     .then(([user]) => {
       if (user[0] != null) {
-        res.status(200).json(user[0]);
+        res.status(200).json(user);
       } else {
         res.status(404).send("Not Found");
       }
     })
     .catch((err) => {
       console.error(err);
-      res.status(500);
+      res.status(500).send("Error retrieving data from database");
     });
 };
 
@@ -94,7 +110,7 @@ const postUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(500);
+      res.status(500).send("Error retrieving data from database");
     });
 };
 
@@ -116,7 +132,7 @@ const updateUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.sendStatus(500);
+      res.sendStatus(500).send("Error retrieving data from database");
     });
 };
 
@@ -134,7 +150,7 @@ const deleteUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.sendStatus(500);
+      res.sendStatus(500).send("Error retrieving data from database");
     });
 };
 
